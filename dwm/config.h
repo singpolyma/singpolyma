@@ -68,7 +68,7 @@ Key keys[] = { \
 	{ 0,					XK_F7,		spawn, 		"firefox" }, \
 	{ MODKEY,			XK_F7,		spawn, 		"psi" }, \
 	{ 0,					XK_F8,		spawn, 		"exec urxvt -name mutt -e mutt" }, \
-	{ MODKEY|ControlMask,		XK_n,		spawn, 		"gksu network-admin" }, \
+	{ MODKEY|ControlMask,		XK_n,		spawn, 		"network-admin" }, \
 	{ MODKEY|ControlMask,		XK_l,		spawn, 		"sleep 0.1 && slock" }, \
 	{ MODKEY|ControlMask,		XK_Delete,	spawn, 		"gnome-power-cmd.sh shutdown" }, \
 	{ MODKEY,			XK_space,	setlayout,	NULL }, \
