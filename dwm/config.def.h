@@ -17,24 +17,13 @@ static Bool usegrab                 = False;    /* True means grabbing the X ser
                                                    during mouse-based resizals */
 
 /* tagging */
-static const char tags[][MAXTAGLEN] = { "www", "term", "chat", "mail", "5", "6", "7", "8", "media" };
-static unsigned int tagset[] = {2, 2}; /* after start, first tag is selected */
+static const char tags[][MAXTAGLEN] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static unsigned int tagset[] = {1, 1}; /* after start, first tag is selected */
 
 static Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating */
 	{ "Gimp",     NULL,       NULL,       0,            True },
-	{ NULL,       NULL,       "Passphrase",       0,    True },
-	{ NULL,       NULL,       "Network Settings", 0, True },
-	{ NULL,       NULL,       "gksu",             0, True },
-	{ NULL,       NULL,       "System Monitor",   0, True },
-	{ "Firefox",  NULL,       NULL,       1 << 0,       False },
-	{ "URxvt",    NULL,       NULL,       1 << 1,       False },
-	{ "Gedit",    NULL,       NULL,       1 << 1,       False },
-	{ "Thunar",   NULL,       NULL,       1 << 1,       False },
-	{ NULL,       NULL,       "Psi",      1 << 2,       False },
-	{ NULL,       NULL,       "mutt",     1 << 3,       False },
-	{ NULL,       NULL,       "cmus",     1 << 8,       False },
-	{ NULL,       NULL,       "mediacentre",      1 << 8,       False },
+	{ "Firefox",  NULL,       NULL,       1 << 8,       True },
 };
 
 /* layout(s) */
@@ -61,30 +50,19 @@ static Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "rxvt", NULL };
+static const char *termcmd[]  = { "uxterm", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY|ControlMask,           XK_space,  spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ 0,                            XK_F4,     spawn,          {.v = termcmd } },
-	{ 0,                            XK_F5,     spawn,          SHCMD("thunar ~/") },
-	{ 0,                            XK_F6,     spawn,          SHCMD("exec xterm -name cmus -e cmus") },
-	{ MODKEY,                       XK_F6,     spawn,          SHCMD("exec xterm -name mediacentre -e ssh singpolyma.dnsalias.net") },
-	{ 0,                            XK_F7,     spawn,          SHCMD("sensible-browser") },
-	{ MODKEY,                       XK_F7,     spawn,          SHCMD("psi") },
-	{ 0,                            XK_F8,     spawn,          SHCMD("exec xterm -name mutt -e mutt") },
-	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("sleep 0.1 && slock") },
-	{ MODKEY|ControlMask,           XK_Delete, spawn,          SHCMD("gnome-power-cmd.sh shutdown") },
-	{ MODKEY,                       XK_Tab,    focusstack,     {.i = -1} },
-	{ MODKEY,                       XK_Tab,    zoom,           {0} },
-	{ MODKEY,                       XK_F4,     killclient,     {0} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
