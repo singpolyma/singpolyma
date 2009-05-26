@@ -1,0 +1,24 @@
+[general]
+accounts = Gmail
+ui = Noninteractive.Basic
+
+[Account Gmail]
+localrepository = Local
+remoterepository = Remote
+maxconnections = 3
+#autorefresh = 2
+#quick = 10
+
+[Repository Local]
+type = Maildir
+localfolders = ~/Gmail
+sep = /
+
+[Repository Remote]
+type = Gmail
+remoteuser = singpolyma@gmail.com
+remotepass = [REDACTED]
+realdelete = no
+#ssl = yes
+#remotehost = imap.gmail.com
+#remoteport = 993

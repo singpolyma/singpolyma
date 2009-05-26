@@ -1,47 +1,118 @@
-set realname = "Stephen Paul Weber"
 set from = "singpolyma@singpolyma.net"
+alternates [^@]+@singpolyma.net, singpolyma@gmail.com
+set reverse_name=yes
+set reverse_realname=no
+
+set realname = "Stephen Paul Weber"
 set use_from = yes
 set envelope_from ="yes"
 my_hdr Jabber-ID: singpolyma@gmail.com
-my_hdr X-PGP-Key: http://pgp.mit.edu:11371/pks/lookup?op=get&search=0x913D04EB
+my_hdr X-URL: http://singpolyma.net
+my_hdr X-PGP-Key: http://singpolyma.net/public.asc
+set send_charset=us-ascii:utf-8
 
 message-hook '~g' 'set attribution="Somebody signing messages as %n wrote:"'
 message-hook '!~g' 'set attribution="Somebody claiming to be %n wrote:"'
+bind index p check-traditional-pgp
 
-set imap_user = "singpolyma@gmail.com"
-set imap_pass = "PASSWORD"
-set folder = "imaps://imap.gmail.com:993"
-set spoolfile = "+INBOX"
-set postponed="+[Gmail]/Drafts"
-set move = no
-
-set sort = 'reverse-threads'
-set imap_check_subscribed
-set imap_keepalive = 500
-set mail_check = 10
+#IMAP ONLY
+#set imap_check_subscribed
+#set imap_keepalive = 500
+#set imap_idle
+#unset imap_passive
+#unset imap_servernoise
+#set imap_user = "singpolyma@gmail.com"
+#set imap_pass = "[REDACTED]"
+#set folder = "imaps://imap.gmail.com:993"
+#set mail_check = 10
+#END IMAP ONLY
 
 set header_cache=~/.mutt/cache/headers
 set message_cachedir=~/.mutt/cache/bodies
 set certificate_file=~/.mutt/certificates
 
+#LOCAL ONLY
+set mbox="+[Gmail]/All Mail"
+set mbox_type = Maildir			# mailbox type
+set folder    = ~/Gmail			# root folder
+mailboxes +INBOX        # makes a short list for switching
+set mail_check = 0
+#END LOCAL ONLY
+set spoolfile = "+INBOX"
+set postponed="+[Gmail]/Drafts"
+set move = no
+unset record
+
+set sort = 'threads'
+set sort_aux = last-date-received
+
+set fcc_attach # forward attachments
+set forward_format = "Fwd: %s"			# format for subject when forwarding
+unset metoo
+unset reply_self
+set include
+set forward_quote
+set ispell		= "aspell -e -c"		# use aspell as ispell
+
 # Use a signature
 set signature="~/.signature"
 
 # Use msmtp rather than sendmail
-set sendmail="/usr/bin/msmtp"   
+set sendmail="/usr/bin/msmtp"
 
-set editor="vim" 
+set editor="vim -c'set tw=76'"
 set edit_headers=yes      # See the headers when editing
 
 set alias_file = ~/.mutt_aliases
 source ~/.mutt_aliases
 set sort_alias=alias
+set query_command="echo ; keyid2email '%s' 2>/dev/null"
 
 set smart_wrap       # Don't wrap mid-word
 set pager_context=5  # Retain 5 lines of previous page when scrolling.
+set date_format="%Y-%m-%d"
+set index_format="%3C %D %Z %20.20L <%15.15a> %s"
+# De-emphasize read
+color index  brightblack default    '!(~N|~O)'
+# Mailing list messages
+color index  blue        default    '~l'
+# Users to highlight
+color index  cyan        default  '~f psycotica0'
+color index  cyan        default  '~f ossguy'
+color index  cyan        default  '~f dj3vande'
+color index  cyan        default  '~g|~G|~k' # PGP. Inline sigs are only picked up when you open a message.
+# Emphasize unread
+color index  white       default    '~N|~O'
+# Users to highlight (new msgs)
+color index  brightcyan  default  '~f psycotica0 (~N|~O)'
+color index  brightcyan  default  '~f ossguy (~N|~O)'
+color index  brightcyan  default  '~f dj3vande (~N|~O)'
+color index  brightcyan  default  '(~g|~G|~k) (~N|~O)' # PGP. Inline sigs are only picked up when you open a message.
+# Mailing list messages (new msgs)
+color index  brightblue  default    '~l (~N|~O)'
+# Emphasize headers
+color header brightred   default  ^(From|Subject):
+color header brightcyan  default  ^(To):
 
 macro index \\ s=[Gmail]/Trash\n
 macro pager \\ s=[Gmail]/Trash\n
+macro index @U s=UW\n\n
+macro pager @U s=UW\n\n
+macro index @F s=FriendsNFamily\n\n
+macro pager @F s=FriendsNFamily\n\n
+macro index @I s=Info\n\n
+macro pager @I s=Info\n\n
+
+# Mailing Lists
+
+subscribe security@xmpp.org
+subscribe discuss@freeculture.org
+subscribe activity-streams@googlegroups.com
+subscribe diso-project@googlegroups.com
+subscribe wsic@csclub.uwaterloo.ca
+subscribe wlsg@csclub.uwaterloo.ca
+subscribe open-web-discuss@googlegroups.com
+lists cecs@lists.uwaterloo.ca
 
 #GPG/PGP stuff
 

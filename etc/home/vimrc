@@ -1,0 +1,21 @@
+syntax on
+colorscheme darkblue
+set background=dark
+set tabstop=3
+set shiftwidth=3
+setlocal omnifunc=syntaxcomplete#Complete
+command W w
+command Q q
+command WQ wq
+command QW wq
+map K  o<cr>f<CR><Esc>kxi
+map =  mz0i=<Esc>A=<Esc>`zl
+map \ mz0x$x`zh
+map /= /^=<CR>
+
+highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd Syntax * syn match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd Syntax * syn match ExtraWhitespace /^\t*\zs \+/
+autocmd Syntax * syn match ExtraWhitespace /[^\t]\zs\t\+/
+autocmd Syntax * syn match ExtraWhitespace / \+\ze\t/
