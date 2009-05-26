@@ -17,7 +17,7 @@ static Bool usegrab                 = False;    /* True means grabbing the X ser
                                                    during mouse-based resizals */
 
 /* tagging */
-static const char tags[][MAXTAGLEN] = { "www", "term", "im", "mail", "irc", "6", "7", "8", "media" };
+static const char tags[][MAXTAGLEN] = { "www", "term", "im", "mail", "5", "6", "7", "8", "media" };
 static unsigned int tagset[] = {2, 2}; /* after start, first tag is selected */
 
 static Rule rules[] = {
@@ -34,7 +34,7 @@ static Rule rules[] = {
 	{ "Thunar",   NULL,       NULL,       1 << 1,       False },
 	{ "psi",      NULL,       NULL,       1 << 2,       False },
 	{ NULL,       "mutt",     NULL,       1 << 3,       False },
-	{ NULL,       "irssi",    NULL,       1 << 4,       False },
+	{ NULL,       "irssi",    NULL,       1 << 2,       False }, /* was 4 */
 	{ NULL,       "cmus",     NULL,       1 << 8,       False },
 };
 
