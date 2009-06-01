@@ -10,7 +10,7 @@ STDIN.read.gsub(/\r\n/,"\n").scan(/BEGIN:VCARD\n([^\f]+?)END:VCARD\n/).each do |
 		line[0] = line[0].split(/;/).shift
 		line[1].gsub!(/\\(.)/, '\1') if line[1]
 		emails << line[1] if line[0] == 'EMAIL'
-		fn = line[1] if line[0] == 'FN'
+		fn = line[1] if line[0] == 'FN' && line[1] != 'null' # String 'null' used by Gmail
 	end
 	emails.each_with_index do |email, i|
 		next if all_emails.index(email)
