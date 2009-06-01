@@ -12,10 +12,10 @@ STDIN.read.gsub(/\r\n/,"\n").scan(/BEGIN:VCARD\n([^\f]+?)END:VCARD\n/).each do |
 		emails << line[1] if line[0] == 'EMAIL'
 		fn = line[1] if line[0] == 'FN'
 	end
-	emails.each do |email|
+	emails.each_with_index do |email, i|
 		next if all_emails.index(email)
 		puts "alias \"#{email}\" \"#{fn || email}\" <#{email}>"
-		puts "alias \"#{fn.gsub(/\s+/,'')}\" \"#{fn}\" <#{email}>" if fn
+		puts "alias \"#{fn.gsub(/\s+/,'')}#{i < 1 ? '' : i+1}\" \"#{fn}\" <#{email}>" if fn
 		all_emails << email
 	end
 end
