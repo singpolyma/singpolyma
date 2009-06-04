@@ -1,0 +1,35 @@
+# Magic local data for file(1) command.
+# Insert here your local magic data. Format is described in magic(5).
+
+0 string/b #!\ /bin/sh        POSIX shell script commands text executable
+
+0 string/b #!\ /usr/bin/ruby  Ruby script text executable
+!:mime   text/x-ruby
+0 string/b #!\ /usr/bin/env\ ruby  Ruby script text executable
+!:mime   text/x-ruby
+0 search .each\ do\ |  Ruby script text executable
+!:mime   text/x-ruby
+0 search .each\ {\ |  Ruby script text executable
+!:mime   text/x-ruby
+0 search =attr_reader\ :  Ruby script text executable
+!:mime   text/x-ruby
+0 search =attr_accessor\ :  Ruby script text executable
+!:mime   text/x-ruby
+0 search =def\ self.  Ruby script text executable
+!:mime   text/x-ruby
+
+0 regex describe\ ".*"\ do  RSpec test text executable (ruby)
+!:mime   text/x-ruby
+
+0 search //
+>0 regex (\\{|\\[)(.*,.*)*(\\}|\\])  JavaScript program text
+!:mime text/javascript
+
+0 string/b #!\ /usr/bin/wish  TCL/TK script text executable
+!:mime   text/x-tcl
+0 string/b package\ require\ Tk  TCL/TK script text executable
+!:mime   text/x-tcl
+0 string/b #!\ /usr/bin/tclsh TCL script text executable
+!:mime   text/x-tcl
+0 search =if\ {    TCL script text executable
+!:mime   text/x-tcl
