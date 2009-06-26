@@ -1,0 +1,195 @@
+# uzbl config.
+# all settings are optional.  you can use uzbl without any config at all (but it won't do much)
+
+# keyboard behavior is vimstyle by default, but you can change this
+# set always_insert_mode to always be in insert mode and disable going out of it.
+# if you do this, make sure you've set a modkey so you can reach the commands
+# from insert mode by combining them with the modkey
+
+# Usually you want to spawn a script to handle things, but any command (such as sh) can be used
+set history_handler  = spawn "$XDG_DATA_HOME/uzbl/scripts/history.sh"
+set download_handler = spawn "$XDG_DATA_HOME/uzbl/scripts/download.sh"
+set cookie_handler   = spawn "$XDG_DATA_HOME/uzbl/scripts/cookies.py"
+
+# You can bind whatever things (spawn <foo>, script <bar>,..) to some events TODO: make events system more generic
+set load_start_handler = set status_message = <span foreground="khaki">wait</span>
+set load_commit_handler = set status_message = <span foreground="green">recv</span>
+set load_finish_handler = set status_message = <span foreground="gold">done</span>
+
+
+set minimum_font_size = 6
+set font_size = 16
+## monospace_size defaults to font_size, but you can alter it independently
+#set monospace_size = 10
+
+## Display or supress images within html sites
+#set autoload_images = 0
+
+## Shrink images to window size
+#set autoshrink_images = 0
+
+## Spellchecker
+#set enable_spellcheck = 1
+
+## Private browsing
+#set enbale_private = 0
+
+## The URI of a stylesheet that is applied to every page
+#set stylesheet_uri = http://www.user.com/mystylelesheet.css
+
+## enable/disable JavaScript
+#set disbale_scripts = 1
+
+## Whether text areas are resizable
+set resizeable_text_areas = 1
+
+## The default encoding used to display text
+set default_encoding = utf-8
+
+## Whether background images should be printed
+set print_background = 0
+
+## Enforce a resolution of 96 DPI. This is meant for compatibility with
+## web pages which cope badly with different screen resolutions
+#set enforce_96_dpi = 1
+
+
+#
+# use with bind ... = sh <shell-oneliner>
+set shell_cmd         = sh -c
+
+
+
+# Behaviour and appearance
+set show_status       = 1
+# you can optionally use this setting to override the background color of the statusbar from your GTK theme.
+#set status_background = #303030
+set status_format     = <span foreground="orange">MSG</span>  <span font_family="monospace">LOAD_PROGRESSBAR</span>  MODE <span weight="bold">KEYCMD</span>    URI
+set status_top        = 0
+# define how your titlebar should look like. (short = statusbar is also shown, long = show everything you must see if statusbar is off)
+set title_format_short = TITLE - Uzbl <NAME>
+set title_format_long = KEYCMD MODE TITLE - Uzbl <NAME> URI
+# set the characters to use for, and the width of the progress bar
+set status_pbar_done  = =
+set status_pbar_pending = -
+set status_pbar_width = 15
+set insert_indicator = INSERT
+set command_indicator = 
+set modkey = Mod1
+# reset to command mode when new page is loaded
+set reset_command_mode = 1
+# this var has precedence over reset_command_mode
+set always_insert_mode = 0
+
+# to start a local socks server, do : ssh -fND localhost:8118 localhost
+#set  proxy_url       = http://127.0.0.1:8118
+#values 0-3
+#set  http_debug      = 0
+set  useragent        = Uzbl (Webkit WEBKIT_MAJOR.WEBKIT_MINOR.WEBKIT_MICRO) (SYSNAME NODENAME KERNREL KERNVER ARCH_SYSTEM [ARCH_UZBL]) (Commit COMMIT)
+#set  max_conns	    = 0
+#set  max_conns_host  = 0
+
+set fifo_dir = /tmp
+set socket_dir = /tmp
+
+# Key bindings
+bind    j         = scroll_vert 20
+bind    `n        = scroll_vert 20 # currently not working
+bind    `s        = scroll_vert 550 # hack in my version, `n is \n, `s is " "
+bind    k         = scroll_vert -20
+bind    h         = scroll_horz -20
+bind    l         = scroll_horz 20
+bind    gg        = scroll_begin
+bind    G         = scroll_end
+bind    b         = back
+bind    m         = forward
+bind    S         = stop
+bind    r         = reload
+bind    R         = reload_ign_cache
+bind    +         = zoom_in
+bind    -         = zoom_out
+bind    T         = toggle_zoom_type
+bind    1         = sh "echo set zoom_level = 1.0 > $4"
+bind    2         = sh "echo set zoom_level = 2.0 > $4"
+bind    t         = toggle_status
+# Hilight matches. Notice the * after the slash - it makes the command incremental, i.e. gets called
+# on every character you type.  You can do `bind /_ = search %s' if you want it less interactive.
+bind    /*        = search %s
+bind    ?*        = search_reverse %s
+#jump to next
+bind    n         = search
+bind    N         = search_reverse
+bind    gh        = uri http://www.uzbl.org
+bind    y _       = uri http://yubnub.org/parser/parse?default=gbbn&command=%s
+bind    g _       = uri http://google.com/search?q=%s
+bind    wp _      = uri http://en.wikipedia.org/?search=%s
+
+# like this you can enter any command at runtime, interactively. prefixed by ':'
+bind    :_        = chain '%s'
+
+# shortcut to set the uri. TODO: i think we can abandon the uri command in favor of 'set uri = ..'
+#bind    o _       = uri %s
+# shortcut to set variables
+bind    s _       = set %s
+bind    i         = toggle_insert_mode
+# disable insert mode (1 to enable).  note that Esc works to disable, regardless of this setting
+bind    I         = toggle_insert_mode 0
+# Enclose the executable in quotes if it has spaces.  Any additional parameters you use will
+# appear AFTER the default parameters
+bind    D         = sh 'exec uzbl -u "http://delicious.com/save?url=$6&title=$7&v=5"'
+bind    d         = uri http://del.icio.us/singpolyma
+bind    o         = spawn "$XDG_DATA_HOME/uzbl/scripts/load_url_from_history.sh"
+bind    s         = js (function(){var url=document.location;var links=document.getElementsByTagName('link');var found=0;for(var i=0,l;l=links[i];i++){if(l.getAttribute('rev')=='canonical'||(/alternate short/).exec(l.getAttribute('rel'))){found=l.getAttribute('href');break;}}if(found){prompt('URL:',found);}else{window.onTinyUrlGot=function(r){if(r.errorCode==0){var t;for(var i in r.results){t=r.results[i].shortUrl;}prompt('URL:',t);}else{alert('Could not shorten with bit.ly');}};var s=document.createElement('script');s.type='text/javascript';s.src='http://api.bit.ly/shorten?login=bitlyapidemo&apiKey=R_0da49e0a9118ff35f52f629d2d71bf07&version=2.0.1&callback=onTinyUrlGot&longUrl='+encodeURIComponent(document.location);document.getElementsByTagName('head')[0].appendChild(s);}})();
+bind     |         = js (function(){readStyle='style-ebook';readSize='size-large';readMargin='margin-medium';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='http://lab.arc90.com/experiments/readability/js/readability-0.1.js?x='+(Math.random());document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='http://lab.arc90.com/experiments/readability/css/readability.css';_readability_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='http://lab.arc90.com/experiments/readability/css/readability-print.css';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();
+#bind    u         = spawn "$XDG_DATA_HOME/uzbl/scripts/load_url_from_bookmarks.sh"
+# with the sample yank script, you can yank one of the arguments into clipboard/selection
+bind    yy        = spawn "$XDG_DATA_HOME/uzbl/scripts/yank.sh" 6 primary
+bind    ytitle    = spawn "$XDG_DATA_HOME/uzbl/scripts/yank.sh" 7 clipboard
+# go the page from primary selection
+bind    p         = sh 'echo "uri `xclip -selection primary -o`" > $4'
+# go to the page in clipboard
+bind    P         = sh 'echo "uri `xclip -selection clipboard -o`" > $4'
+# start a new uzbl instance from the page in primary selection
+bind    'p        = sh 'exec uzbl -u $(xclip -o)'
+bind    ZZ        = exit
+bind    Xs         = js alert("hi");
+# example showing how to use sh
+# it sends a command to the fifo, whose path is told via a positional param
+# if fifo_dir is not set, it'll echo to a file named (null) somewhere >:) remember to delete it
+# The body of the shell command should be one parameter, so if it has spaces like here,
+# you must enclose it in quotes.  Remember to escape (and double-escape) quotes and backslashes
+# in the body.  Any additional parameters you use will appear AFTER the default parameters (cfg file
+# path, fifo & socket dirs, etc.)
+bind    XS        = sh 'echo "js alert (\\"This is sent by the shell via a fifo\\")" > "$4"'
+
+bind    !dump     = sh "echo dump_config > $4"
+bind    !reload   = sh 'cat $1 > $4'
+
+# this script allows you to configure (per domain) values to fill in form fields (eg login information) and to fill in these values automatically
+#bind za = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.sh
+#bind ze = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.sh edit
+#bind zn = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.sh new
+#bind zl = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.sh load
+
+# other - more advanced - implementation using perl: (could not get this to run - Dieter )
+#bind LL = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.pl load
+#bind LN = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.pl new
+#bind LE = spawn $XDG_DATA_HOME/uzbl/scripts/formfiller.pl edit
+
+# we ship some javascripts to do keyboard based link hinting/following.  (webkit does not have C DOM bindings yet)
+# this is similar to how it works in vimperator (and konqueror)
+# TODO: did we resolve: "no click() event for hyperlinks so no referrer set" ?
+#hit F to toggle the Hints (now in form of link numbering)
+bind    F = script $XDG_DATA_HOME/uzbl/scripts/hint.js
+# the most stable version:
+bind    f* = script $XDG_DATA_HOME/uzbl/scripts/follow_Numbers.js %s
+# using strings, not polished yet:
+#bind    fL* = script $XDG_DATA_HOME/uzbl/scripts/follow_Numbers_Strings.js %s
+
+# you can use this to disable all plugins
+set disable_plugins = 0
+
+#set icon = ./uzbl.png
+
+# "home" page if you will
+#set uri = uzbl.org
