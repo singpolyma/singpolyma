@@ -21,14 +21,29 @@ servers = (
     use_ssl = "no";
     ssl_verify = "no";
     autoconnect = "yes";
-    password = "[REDACTED]";
+    password = "desa";
+  },
+  {
+    address = "irc.bushong.net";
+    chatnet = "bushong";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   },
   {
     address = "talk.google.com";
     port = "5223";
     use_ssl = "yes";
     chatnet = "GTalk";
-    password = "[REDACTED]";
+    password = "PASWORD";
+    autoconnect = "yes";
+  },
+  {
+    address = "singpolyma.net";
+    port = "5222";
+    use_ssl = "no";
+    chatnet = "DHXMPP";
+    password = "PASSWORD";
     autoconnect = "yes";
   }
 );
@@ -70,15 +85,19 @@ chatnets = {
   freenode = {
     type = "IRC";
     nick = "singpolyma";
-    autosendcmd = "/quote capab identify-msg; /script load format_identify";
+    autosendcmd = "/quote capab identify-msg; /script load format_identify; /umode +w";
   };
-  GTalk = { type = "XMPP"; nick = "singpolyma@gmail.com"; };
+  bushong = { type = "IRC"; nick = "singpolyma"; };
+  GTalk = { type = "XMPP"; nick = "singpolyma@gmail.com/mini"; };
+  DHXMPP = { type = "XMPP"; nick = "singpolyma@singpolyma.net/mini"; };
 };
 
 channels = (
   { name = "microformats"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "openid"; chatnet = "freenode"; autojoin = "Yes"; },
-  { name = "csc"; chatnet = "freenode"; autojoin = "No"; }
+  { name = "##security"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "ruby-lang"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "mashlogic"; chatnet = "bushong"; autojoin = "Yes"; }
 );
 
 aliases = {
@@ -127,6 +146,7 @@ aliases = {
   "MANUAL-WINDOWS" = "set use_status_window off;set autocreate_windows off;set autocreate_query_level none;set autoclose_windows off;set reuse_unused_windows on;save";
   EXEMPTLIST = "mode $C +e";
   ATAG = "WINDOW SERVER";
+  aaway = "/foreach server /away -all";
 };
 
 statusbar = {
@@ -250,6 +270,7 @@ settings = {
   "fe-text" = { actlist_sort = "refnum"; };
   "fe-common/core" = {
     beep_msg_level = "INVITES MSGS TOPICS DCC DCCMSGS HILIGHT";
+    activity_hide_level = "= JOINS PARTS QUITS";
   };
   "perl/core/scripts" = {
     beep_cmd = "play /usr/share/psi/sound/chat2.wav 1> /dev/null 2> /dev/null";
@@ -259,6 +280,8 @@ settings = {
   "xmpp/core" = {
     roster_show_offline = "no";
     roster_show_offline_unsuscribed = "no";
+    xmpp_priority = "30";
+    xmpp_raw_window = "no";
   };
 };
 keyboard = (
@@ -272,12 +295,16 @@ keyboard = (
   { key = "meta-e"; id = "change_window"; data = "8"; },
   { key = "meta-u"; id = "change_window"; data = "9"; },
   { key = "meta-i"; id = "change_window"; data = "10"; },
-  { key = "meta-c"; id = "command"; data = "win c"; }
+  { key = "meta-c"; id = "command"; data = "win c"; },
+  { key = "meta-n"; id = "active_window"; }
 );
 hilights = ( { text = "singpolyma"; nick = "yes"; word = "yes"; } );
-notifies = { 
+notifies = {
   ossguy = { };
   psycotica0 = { };
   dj3vande = { };
   adityavm = { };
+  cvollick = { };
+  tantek = { };
 };
+logs = { };
