@@ -28,6 +28,7 @@ static Rule rules[] = {
 	{ NULL,       NULL,       "gksu",             0, True },
 	{ NULL,       NULL,       "System Monitor",   0, True },
 	{ "Firefox",  NULL,       NULL,       1 << 0,       False },
+	{ "Uzbl",     NULL,       NULL,       1 << 0,       False },
 	{ "X-www-browser",  NULL, NULL,       1 << 0,       False },
 	{ "rxvt",     NULL,       NULL,       1 << 1,       False },
 	{ "Gedit",    NULL,       NULL,       1 << 1,       False },
