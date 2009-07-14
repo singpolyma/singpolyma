@@ -85,7 +85,7 @@ set always_insert_mode = 0
 #set  proxy_url       = http://127.0.0.1:8118
 #values 0-3
 #set  http_debug      = 0
-set  useragent        = Uzbl (Webkit WEBKIT_MAJOR.WEBKIT_MINOR.WEBKIT_MICRO) (SYSNAME NODENAME KERNREL KERNVER ARCH_SYSTEM [ARCH_UZBL]) (Commit COMMIT)
+set  useragent        = Uzbl (Webkit WEBKIT_MAJOR.WEBKIT_MINOR.WEBKIT_MICRO) (SYSNAME NODENAME KERNREL KERNVER ARCH_SYSTEM [ARCH_UZBL]) (Commit COMMIT) Mozilla/5.0
 #set  max_conns	    = 0
 #set  max_conns_host  = 0
 
@@ -95,7 +95,7 @@ set socket_dir = /tmp
 # Key bindings
 bind    j         = scroll_vert 20
 bind    `n        = scroll_vert 20 # currently not working
-bind    `s        = scroll_vert 550 # hack in my version, `n is \n, `s is " "
+bind    `s        = scroll_vert 95% # hack in my version, `n is \n, `s is " "
 bind    k         = scroll_vert -20
 bind    h         = scroll_horz -20
 bind    l         = scroll_horz 20
@@ -123,6 +123,8 @@ bind    gh        = uri http://www.uzbl.org
 bind    y _       = uri http://yubnub.org/parser/parse?default=gbbn&command=%s
 bind    g _       = uri http://google.com/search?q=%s
 bind    wp _      = uri http://en.wikipedia.org/?search=%s
+bind    @ _       = uri http://twitter.com/%s
+bind    @@ _      = uri http://identi.ca/%s
 
 # like this you can enter any command at runtime, interactively. prefixed by ':'
 bind    :_        = chain '%s'
@@ -141,6 +143,7 @@ bind    d         = uri http://del.icio.us/singpolyma
 bind    o         = spawn "$XDG_DATA_HOME/uzbl/scripts/load_url_from_history.sh"
 bind    s         = js (function(){var url=document.location;var links=document.getElementsByTagName('link');var found=0;for(var i=0,l;l=links[i];i++){if(l.getAttribute('rev')=='canonical'||(/alternate short/).exec(l.getAttribute('rel'))){found=l.getAttribute('href');break;}}if(found){prompt('URL:',found);}else{window.onTinyUrlGot=function(r){if(r.errorCode==0){var t;for(var i in r.results){t=r.results[i].shortUrl;}prompt('URL:',t);}else{alert('Could not shorten with bit.ly');}};var s=document.createElement('script');s.type='text/javascript';s.src='http://api.bit.ly/shorten?login=bitlyapidemo&apiKey=R_0da49e0a9118ff35f52f629d2d71bf07&version=2.0.1&callback=onTinyUrlGot&longUrl='+encodeURIComponent(document.location);document.getElementsByTagName('head')[0].appendChild(s);}})();
 bind     |         = js (function(){readStyle='style-ebook';readSize='size-large';readMargin='margin-medium';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='http://lab.arc90.com/experiments/readability/js/readability-0.1.js?x='+(Math.random());document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='http://lab.arc90.com/experiments/readability/css/readability.css';_readability_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='http://lab.arc90.com/experiments/readability/css/readability-print.css';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();
+bind     L         = js var inputs = document.getElementsByTagName('input'); for(var i = 0; i < inputs.length; i++) {if(inputs[i].name == 'openid_identifier' || inputs[i].name == 'openid_url') {inputs[i].value = 'singpolyma.net'; inputs[i].form.submit();}}
 #bind    u         = spawn "$XDG_DATA_HOME/uzbl/scripts/load_url_from_bookmarks.sh"
 # with the sample yank script, you can yank one of the arguments into clipboard/selection
 bind    yy        = spawn "$XDG_DATA_HOME/uzbl/scripts/yank.sh" 6 primary
@@ -180,9 +183,10 @@ bind    !reload   = sh 'cat $1 > $4'
 # this is similar to how it works in vimperator (and konqueror)
 # TODO: did we resolve: "no click() event for hyperlinks so no referrer set" ?
 #hit F to toggle the Hints (now in form of link numbering)
-bind    F = script $XDG_DATA_HOME/uzbl/scripts/hint.js
+#bind    F = script $XDG_DATA_HOME/uzbl/scripts/hint.js
 # the most stable version:
 bind    f* = script $XDG_DATA_HOME/uzbl/scripts/follow_Numbers.js %s
+bind    F* = script $XDG_DATA_HOME/uzbl/scripts/inspect_Numbers.js %s
 # using strings, not polished yet:
 #bind    fL* = script $XDG_DATA_HOME/uzbl/scripts/follow_Numbers_Strings.js %s
 

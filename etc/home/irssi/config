@@ -35,15 +35,15 @@ servers = (
     port = "5223";
     use_ssl = "yes";
     chatnet = "GTalk";
-    password = "PASWORD";
+    password = "[REDACTED]";
     autoconnect = "yes";
   },
   {
     address = "singpolyma.net";
-    port = "5222";
-    use_ssl = "no";
+    port = "5223";
+    use_ssl = "yes";
     chatnet = "DHXMPP";
-    password = "PASSWORD";
+    password = "[REDACTED]";
     autoconnect = "yes";
   }
 );
@@ -96,6 +96,7 @@ channels = (
   { name = "microformats"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "openid"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##security"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "##crypto"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "ruby-lang"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "mashlogic"; chatnet = "bushong"; autojoin = "Yes"; }
 );
@@ -147,6 +148,7 @@ aliases = {
   EXEMPTLIST = "mode $C +e";
   ATAG = "WINDOW SERVER";
   aaway = "/foreach server /away -all";
+  fwhois = "/msg -freenode nickserv info";
 };
 
 statusbar = {
@@ -308,3 +310,4 @@ notifies = {
   tantek = { };
 };
 logs = { };
+ignores = ( { mask = "diepchess"; level = "ALL"; } );

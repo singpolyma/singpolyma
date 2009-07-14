@@ -7,8 +7,8 @@ set realname = "Stephen Paul Weber"
 set use_from = yes
 set envelope_from ="yes"
 my_hdr Jabber-ID: singpolyma@gmail.com
-my_hdr X-URL: http://singpolyma.net
-my_hdr X-PGP-Key: http://singpolyma.net/public.asc
+my_hdr OpenPGP: id=CE519CDE\; url=https://singpolyma.net/public.asc
+my_hdr X-URL: https://singpolyma.net
 set send_charset=us-ascii:utf-8
 
 message-hook '~g' 'set attribution="Somebody signing messages as %n wrote:"'
@@ -107,23 +107,30 @@ macro pager @I s=Info\n\n
 
 subscribe security@xmpp.org
 subscribe discuss@freeculture.org
-subscribe activity-streams@googlegroups.com
 subscribe diso-project@googlegroups.com
 subscribe wsic@csclub.uwaterloo.ca
 subscribe wlsg@csclub.uwaterloo.ca
 subscribe open-web-discuss@googlegroups.com
+subscribe discuss@microformats.org
 lists cecs@lists.uwaterloo.ca
+lists activity-streams@googlegroups.com
 
-#GPG/PGP stuff
+# Crypto stuff
 
-set crypt_autopgp=yes
 set crypt_autosign=yes
 set crypt_autoencrypt=no
 set crypt_replyencrypt=yes
 set crypt_replysign=yes
 set crypt_replysignencrypted=yes
+set crypt_autopgp=yes
+source ~/.muttpgp
+
+# GPG/PGP stuff
+
+send-hook ~l 'set pgp_autoinline=yes'
+send-hook !~l 'set pgp_autoinline=no'
+#set pgp_autoinline=yes
 set pgp_auto_decode=yes
-set pgp_autoinline=yes
 set pgp_replyinline=yes
 set pgp_decode_command="gpg %?p?--passphrase-fd 0? --no-verbose --batch --output - %f"
 set pgp_verify_command="gpg --no-verbose --batch --output - --verify %s %f"
@@ -135,6 +142,26 @@ set pgp_encrypt_sign_command="pgpewrap gpg --passphrase-fd 0 --batch --quiet --n
 set pgp_import_command="gpg --no-verbose --import -v %f"
 set pgp_export_command="gpg --no-verbose --export --armor %r"
 set pgp_verify_key_command="gpg --no-verbose --batch --fingerprint --check-sigs %r"
-set pgp_list_pubring_command="gpg --no-verbose --batch --with-colons --list-keys %r" 
-set pgp_list_secring_command="gpg --no-verbose --batch --with-colons --list-secret-keys %r" 
+set pgp_list_pubring_command="gpg --no-verbose --batch --with-colons --list-keys %r"
+set pgp_list_secring_command="gpg --no-verbose --batch --with-colons --list-secret-keys %r"
 set pgp_good_sign="^gpg: Good signature from"
+
+# S/MIME stuff
+
+#set smime_timeout=300
+set smime_default_key="25c06b89.0"
+set smime_certificates="~/.smime/certificates"
+set smime_keys="~/.smime/keys"
+set smime_pk7out_command="openssl smime -verify -in %f -noverify -pk7out"
+set smime_get_cert_command="openssl pkcs7 -print_certs -in %f"
+set smime_get_signer_cert_command="openssl smime -verify -in %f -noverify -signer %c -out /dev/null"
+set smime_get_cert_email_command="openssl x509 -in  %f -noout -email"
+set smime_import_cert_command="smime_keys add_cert %f"
+set smime_encrypt_with="des3
+set smime_encrypt_command="openssl smime -encrypt -%a -outform DER -in %f %c"
+set smime_sign_command="openssl smime -sign -signer %c -inkey %k -passin stdin -in %f -certfile %i -outform DER"
+set smime_decrypt_command="openssl smime -decrypt  -passin stdin -inform DER -in %f -inkey %k -recip %c"
+set smime_verify_command="openssl smime -verify -inform DER -in %s %C -content %f"
+set smime_verify_opaque_command="\
+openssl smime -verify -inform DER -in %s %C || \
+openssl smime -verify -inform DER -in %s -noverify 2>/dev/null"

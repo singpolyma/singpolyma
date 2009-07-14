@@ -1,5 +1,4 @@
 syntax on
-colorscheme darkblue
 set background=dark
 set tabstop=3
 set shiftwidth=3

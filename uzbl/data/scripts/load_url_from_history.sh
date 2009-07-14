@@ -14,8 +14,9 @@ then
 else    
         DMENU="dmenu -i"
 	# choose from all entries (no date or title), the first one being current url, and after that all others, sorted and uniqued, in ascending order
-	current=`tail -n 1 $history_file | awk '{print $3}'`; goto=`(echo $current; awk '{print $3}' $history_file | grep -v "^$current\$" | sort -u) | $DMENU $COLORS`
-fi 
+	current="`tail -n 1 $history_file | cut -d' ' -f3`"
+	goto=`(echo $current; awk '{print $3}' $history_file | grep -v "^$current\$" | sort -u) | $DMENU $COLORS`
+fi
 
 [ -n "$goto" ] && echo "uri $goto" > $4
 #[ -n "$goto" ] && uzblctrl -s $5 -c "uri $goto"

@@ -2,4 +2,5 @@
 #TODO: strip 'http://' part
 file=${XDG_DATA_HOME:-$HOME/.local/share}/uzbl/history
 [ -d `dirname $file` ] || exit 1
-echo "$8 $6 $7" >> $file
+URL="`echo "$6" | sed -e's/ /%20/g'`"
+echo "$8 $URL $7" >> $file
