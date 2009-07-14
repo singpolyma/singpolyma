@@ -1,0 +1,1 @@
+rsync --size-only --progress --stats -arvz Music/ singpolyma@singpolyma.dnsalias.net:Music/

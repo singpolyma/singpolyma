@@ -1,0 +1,4 @@
+#!/bin/sh
+
+xrandr --output VGA --auto
+xrandr --output LVDS --auto

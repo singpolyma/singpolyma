@@ -1,0 +1,10 @@
+#!/bin/sh
+
+URL="`urlencode $1`"
+SURL="`curl -s "http://revcanonical.appspot.com/api?url=$URL"`"
+if [ -z "`echo "$SURL" | grep 'ApplicationError'`" -a -z "`echo "$SURL" | grep "$1"`" ]; then
+	echo "$SURL"
+else
+	curl -s "http://api.bit.ly/shorten?login=bitlyapidemo&apiKey=R_0da49e0a9118ff35f52f629d2d71bf07&version=2.0.1&format=text&longUrl=$URL"
+	echo
+fi

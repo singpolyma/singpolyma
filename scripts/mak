@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# run make with the given flags either in the current directory
+# or in the nearest parent with a Makefile
+
+GO=1
+TEMPFILE="`tempfile`"
+while [ $GO -eq 1 ]; do
+	make $* 2>&1 | tee "$TEMPFILE"
+   NOTFOUND="`grep '*** No targets specified and no makefile found.' "$TEMPFILE"`"
+	if [ ! -z "$NOTFOUND" ]; then
+		WD="`pwd`"
+		cd ..
+		if [ "`pwd`" = "$WD" ]; then
+			echo "No Makefile found!"
+			GO=0
+		fi
+	else
+		GO=0
+	fi
+done

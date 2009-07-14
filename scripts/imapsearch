@@ -1,0 +1,79 @@
+#!/usr/bin/ruby
+
+=begin
+Query syntax is defined by section 6.4.4 of http://www.ietf.org/rfc/rfc3501.txt
+
+EXAMPLE CONFIG for ~/.imapsearchrc
+
+host: imap.gmail.com
+port: 993
+user: GMAIL ADDRESS
+pass: GMAIL PASSWORD
+mbox: '[Gmail]/All Mail'
+=end
+
+require 'net/imap'
+require 'yaml'
+require 'optparse'
+
+options = {
+		:config  => "#{ENV['HOME']}/.imapsearchrc",
+		:verbose => false,
+		:num     => 10
+	}
+OptionParser.new do |opts|
+	opts.banner = "Usage: #{$0} [options]"
+	opts.on("-c", "--config [PATH]", "Config file path") do |v|
+		options[:config] = v
+	end
+	opts.on("-n", "--num [NUMBER]", "Number to display") do |v|
+		options[:num] = v.to_i
+	end
+	opts.on("-v", "--verbose", "Verbose on") do |v|
+		options[:verbose] = v
+	end
+end.parse!
+
+config = YAML::load(open(options[:config]).read)
+
+query = []
+is_arg = false
+ARGV.each do |token|
+	if token =~ /^(?:ALL|(?:UN)?ANSWERED|BCC|BEFORE|BODY|CC|(?:UN)?DELETED|(?:UN)?DRAFT|(?:UN)?FLAGGED|FROM|HEADER|(?:UN)?KEYWORD|LARGER|NEW|NOT|OLD|ON|OR|RECENT|(?:UN)?SEEN|SENTBEFORE|SENTON|SENTSINCE|SINCE|SMALLER|SUBJECT|TEXT|TO|UID)$/
+		query << token
+		is_arg = token
+	else
+		unless is_arg
+			query << 'TEXT'
+			is_arg = 'TEXT'
+		end
+		t = query.pop
+		if t =~ /^(?:ALL|(?:UN)?ANSWERED|BCC|BEFORE|BODY|CC|(?:UN)?DELETED|(?:UN)?DRAFT|(?:UN)?FLAGGED|FROM|HEADER|(?:UN)?KEYWORD|LARGER|NEW|NOT|OLD|ON|OR|RECENT|(?:UN)?SEEN|SENTBEFORE|SENTON|SENTSINCE|SINCE|SMALLER|SUBJECT|TEXT|TO|UID)$/
+			query << t
+			query << token
+		else
+			t += ' ' + token
+			query << t
+		end
+		is_arg = false unless is_arg =~ /^(?:TEXT|BODY|HEADER|SUBJECT)$/
+	end
+end
+
+imap = Net::IMAP.new(config['host'], config['port'],true)
+imap.login(config['user'], config['pass'])
+imap.select(config['mbox'])
+
+imap.search(query, 'UTF-8')[-options[:num],options[:num]].reverse.each do |message_id|
+	if options[:verbose]
+		puts imap.fetch(message_id, 'RFC822')[0].attr['RFC822'].gsub(/\r\n/,"\n")
+		puts
+	else
+		headers = imap.fetch(message_id, 'RFC822.HEADER')[0].attr['RFC822.HEADER']
+		from = headers.scan(/^From: (.+)$/)[0][0].strip
+		subject = headers.scan(/^Subject: (.+)$/)[0][0].strip
+		printf "%-50s %s\n", from, subject
+	end
+end
+
+imap.logout
+imap.disconnect

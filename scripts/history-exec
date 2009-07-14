@@ -1,0 +1,5 @@
+#!/bin/sh
+read REPLY
+echo "$REPLY\
+"  >> .bash_history
+$REPLY

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+LIST=""
+ADRS="`gpg --list-keys --with-colons | cut -d':' -f10 | sed -e's/.*<\([^>]*\)>.*/\1/' | grep -v '^[^@]*$'`"
+IFS="
+"
+for ADR in $ADRS; do
+	if [ -n "$LIST" ]; then LIST="$LIST | "; fi
+	LIST="$LIST~C $ADR"
+done
+
+echo "send-hook '!($LIST) !~l' 'set smime_is_default=yes'"
+echo "send-hook '($LIST) | ~l' 'unset smime_is_default'"

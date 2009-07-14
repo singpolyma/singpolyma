@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Make X load the resources file, should be a way to make this automatic
+#xrdb .Xresources
+# Set background colour, not needed when running gnome-settings-daemon
+#xsetroot -solid black
+
+# Autostart apps
+rxvt &
+nm-applet &
+sensible-browser &
+rxvt -title mutt -name mutt -e mutt &
+#psi &
+# Spin up "thread" that polls network status until we're connected, then launches psi, offlineimap, irssi
+sh -c '
+	while [ -z "`ifconfig | grep "inet addr" | grep -v 127.0.0.1`" ]; do
+		sleep 10;
+	done;
+	offlineimapforever &
+	rxvt -title irssi -name irssi -e irssi &
+' &
+
+# GNOME crap
+gnome-settings-daemon &
+gnome-power-manager &
+
+# Actuall run DWM with status message
+touch "$HOME/.keep-dwm-running" # If this file exists DWM will relaunch itself on close
+while [ -f "$HOME/.keep-dwm-running" ]; do
+	while true; do
+		_INET="`ifconfig eth1 | sed -e 'N' -e 's/eth1[^\f]*\?inet addr\:\([^\f]*\?\)  B[^\f]*/\1/' -e '3,$ d'`"
+		_INET2="`echo "$_INET" | grep eth`"
+		if [ "$_INET." = "." -o "$_INET2." != "." ]; then
+			_INET="No network"
+		fi
+		BAT="$(((`cat /proc/acpi/battery/BAT1/state | grep "remaining capacity" | sed 's/.*: \{5,\}\(.*\) mWh/\1/'`*100)/`cat /proc/acpi/battery/BAT1/info | grep "last full capacity" | sed 's/.*: \{5,\}\(.*\) mWh/\1/'`))%"
+		BLOGLINES="`newbloglines`f"
+		MAIL="`newmail`m"
+		echo `date "+%F %T"`" $_INET $BLOGLINES $MAIL $BAT"
+		sleep 1
+	done | dwm
+done

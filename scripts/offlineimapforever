@@ -1,0 +1,15 @@
+#!/bin/sh
+
+COUNTER=0
+while true; do
+	if [ $COUNTER -eq 9 ]; then
+		offlineimap -o 2>&1 >> "$HOME/.offlineimap.log" &
+	else
+		offlineimap -o -q 2>&1 >> "$HOME/.offlineimap.log" &
+	fi
+	PID="$!"
+	COUNTER="`echo "$COUNTER 1 + 10 % p" | dc`"
+	echo "Sleeping..." >> "$HOME/.offlineimap.log"
+	sleep 120 # 2 minutes
+	kill -9 "$PID"
+done

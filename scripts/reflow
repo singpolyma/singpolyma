@@ -1,0 +1,3 @@
+#!/usr/bin/perl -0
+
+$_=<>; s/(?<!\n)\r?\n(?!\r?\n)/ /g; print

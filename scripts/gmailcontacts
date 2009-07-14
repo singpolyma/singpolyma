@@ -1,0 +1,3 @@
+#!/bin/sh
+
+curl 'https://mail.google.com/mail/contacts/data/export?exportType=ALL&out=VCARD' -b 'GX=DQAAAKgAAABcMpgLvt76uIIjmOfIVBOor37_PSWsgjFw-yqMFWIgowrbTJzU8ESOO0Q4nA6DVnhfP3s4vibmrsqlJEnI5iSsVh4eIrIZyHCTyvIbKBQ4ClhtGL1Sg1-LOkhenXMzCVSwWAL8Gk6uaIRMbCPmY-1eGkSg4SFIqVbAqPy8K3y4LD5n8rZobWjfzQzktLKKqTyOs0xB2RaiOyxw3XDnrDI7COl2zPTTBIe_ATTms4X6AA'

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ $((`date +%s`-`ls --time-style=+%s -l ~/.bloglinescount | awk '{ print $6 }'`)) -gt 300 ]; then
+
+	COUNT="`curl -s 'http://rpc.bloglines.com/update?user=singpolyma@singpolyma.net&ver=1' | cut -d'|' -f2`"
+	if [ -z "$COUNT" ]; then
+		COUNT="0"
+	fi
+
+	echo "$COUNT" > ~/.bloglinescount
+
+fi
+
+cat ~/.bloglinescount
