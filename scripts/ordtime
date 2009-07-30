@@ -1,0 +1,12 @@
+#!/usr/bin/ruby
+
+require 'date'
+require 'time'
+
+t = if ARGV[0]
+	Time.parse(ARGV[0])
+else
+	Time.now
+end
+print "#{t.year}-#{t.yday}"
+puts ("%.5f" % Date::time_to_day_fraction(t.hour, t.min, t.sec).to_f)[1..-1]
