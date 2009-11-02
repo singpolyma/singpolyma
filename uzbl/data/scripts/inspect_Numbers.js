@@ -126,8 +126,9 @@ function inspectElem(item) {
     if (item) {
         var name = item.tagName;
         if (name == 'A') {
-            Uzbl.run('set status_message = <span foreground="green">&lt;'+item.href+'&gt;</span>');
-            Uzbl.run('sh \'echo "'+item.href+'" | xclip\'');
+            Uzbl.run('set status_message = <span foreground="green">&lt;'+item.href.replace('&','&amp;')+'&gt;</span>');
+            Uzbl.run('sh \'echo -n "'+item.href+'" | xclip\'');
+            Uzbl.run('sh \'echo -n "'+item.href+'" | xclip -selection clipboard\'');
         } else if (name == 'INPUT') {
             var type = item.getAttribute('type').toUpperCase();
             if (type == 'TEXT' || type == 'FILE' || type == 'PASSWORD') {
