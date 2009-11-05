@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd "$1"
+IFS="
+"
+for DIR in *; do
+	if [ -d "$DIR/$2" ]; then
+		echo "`pwd`/$DIR/$2"
+	fi
+done
