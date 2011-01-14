@@ -1,7 +1,6 @@
 #!/bin/sh
 
-url="$6"
-fifo="$4"
+env |grep UZBL 1>&2
 
 do_scripts() {
 	scripts_dir="$1"
@@ -16,7 +15,7 @@ do_scripts() {
 		for INCLUDE in `echo "$META" | grep "^\s*\/\/\s*@include"`; do
 			# Munge into grep pattern
 			INCLUDE="`echo "$INCLUDE" | sed -e 's/^\s*\/\/\s*@include\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
-			if echo "$url" | grep -x "$INCLUDE"; then
+			if echo "$UZBL_URI" | grep -x "$INCLUDE"; then
 				SHOULD_RUN=true
 				break
 			fi
@@ -32,7 +31,7 @@ do_scripts() {
 		done
 		# Run the script
 		if [ $SHOULD_RUN = true ]; then
-			echo "script '$SCRIPT'" > "$fifo"
+			echo "script '$SCRIPT'" >> "$UZBL_FIFO"
 		fi
 	done
 }
