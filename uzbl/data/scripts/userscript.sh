@@ -1,13 +1,12 @@
 #!/bin/sh
 
-env |grep UZBL 1>&2
-
 do_scripts() {
 	scripts_dir="$1"
 	IFS="
 	"
 	# Loop over all userscripts in the directory
 	for SCRIPT in `grep -lx "\s*//\s*==UserScript==\s*" "$scripts_dir"/*`; do
+		SCRIPT="`readlink -en "$SCRIPT"`"
 		# Extract metadata chunk
 		META="`sed -ne '/^\s*\/\/\s*==UserScript==\s*$/,/^\s*\/\/\s*==\/UserScript==\s*$/p' "$SCRIPT"`"
 		SHOULD_RUN=false # Assume this script will not be included
