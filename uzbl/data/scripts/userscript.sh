@@ -5,7 +5,7 @@ do_scripts() {
 	IFS="
 	"
 	# Loop over all userscripts in the directory
-	for SCRIPT in `grep -lx "\s*//\s*==UserScript==\s*" "$scripts_dir"/*`; do
+	for SCRIPT in `grep -lx "\s*//\s*==UserScript==\s*" "$scripts_dir"/*.user.js`; do
 		SCRIPT="`readlink -en "$SCRIPT"`"
 		# Extract metadata chunk
 		META="`sed -ne '/^\s*\/\/\s*==UserScript==\s*$/,/^\s*\/\/\s*==\/UserScript==\s*$/p' "$SCRIPT"`"
