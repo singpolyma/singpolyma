@@ -2,11 +2,6 @@
 
 do_scripts() {
 	scripts_dir="$1"
-	if [ -z $2 ]; then
-		current_context="all"
-	else
-		current_context="$2" # should be document-end or document-start or all
-	fi
 	IFS="
 	"
 	# Loop over all userscripts in the directory
@@ -39,7 +34,7 @@ do_scripts() {
 		for RUN_AT in `echo "$META" | grep "^\s*\/\/\s*@run-at"`; do
 			THIS_RUNS_AT="`echo "$RUN_AT" | sed -e 's/^\s*\/\/\s*@run-at\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
 		done
-		if [ "$current_context" != "all" -a "$THIS_RUNS_AT" != "$current_context" ]; then
+		if [ "$current_context" != "document-any" -a "$THIS_RUNS_AT" != "$current_context" ]; then
 			SHOULD_RUN=false
 		fi
 
@@ -51,4 +46,5 @@ do_scripts() {
 }
 
 # TODO search XDG_DATA_DIRS
-do_scripts "`dirname $0`/../userscripts" "$1"
+current_context="${1-document-any}"
+do_scripts "`dirname $0`/../userscripts"
