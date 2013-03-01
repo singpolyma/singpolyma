@@ -25,6 +25,7 @@ do_scripts() {
 		META="`sed -ne '/^\s*\/\/\s*==UserScript==\s*$/,/^\s*\/\/\s*==\/UserScript==\s*$/p' "$SCRIPT"`"
 
 		SHOULD_RUN=0 # Assume this script will not be included
+		process_rule "match" 1
 		process_rule "include" 1
 		process_rule "exclude" 0
 
