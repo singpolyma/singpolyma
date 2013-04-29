@@ -19,6 +19,14 @@ do_scripts() {
 				break
 			fi
 		done
+                for MATCH in `echo "$META" | grep "^\s*\/\/\s*@match"`; do
+                        # Munge into grep pattern
+			 MATCH="`echo "$MATCH" | sed -e 's/^\s*\/\/\s*@match\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
+                        if echo "$UZBL_URI" | grep -x "$MATCH"; then
+                                SHOULD_RUN=true
+                                break
+                        fi
+                done
 		# Loop over all exclude rules
 		for EXCLUDE in `echo "$META" | grep "^\s*\/\/\s*@exclude"`; do
 			# Munge into grep pattern
