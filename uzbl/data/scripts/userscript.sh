@@ -1,5 +1,19 @@
 #!/bin/sh
 
+process_rule() {
+	RULE_NAME=$1
+	SHOULD_RUN_IF_MATCHES=$2
+
+	# Loop over all rules
+	for RULE in `echo "$META" | grep "^\s*\/\/\s*@$RULE_NAME"`; do
+		# Munge into grep pattern
+		RULE="`echo "$RULE" | sed -e 's/^\s*\/\/\s*@'$RULE_NAME'\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
+		if echo "$UZBL_URI" | grep -x "$RULE"; then
+			SHOULD_RUN=$SHOULD_RUN_IF_MATCHES
+		fi
+	done
+}
+
 do_scripts() {
 	scripts_dir="$1"
 	IFS="
@@ -9,27 +23,14 @@ do_scripts() {
 		SCRIPT="`readlink -en "$SCRIPT"`"
 		# Extract metadata chunk
 		META="`sed -ne '/^\s*\/\/\s*==UserScript==\s*$/,/^\s*\/\/\s*==\/UserScript==\s*$/p' "$SCRIPT"`"
-		SHOULD_RUN=false # Assume this script will not be included
-		# Loop over all include rules
-		for INCLUDE in `echo "$META" | grep "^\s*\/\/\s*@include"`; do
-			# Munge into grep pattern
-			INCLUDE="`echo "$INCLUDE" | sed -e 's/^\s*\/\/\s*@include\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
-			if echo "$UZBL_URI" | grep -x "$INCLUDE"; then
-				SHOULD_RUN=true
-				break
-			fi
-		done
-		# Loop over all exclude rules
-		for EXCLUDE in `echo "$META" | grep "^\s*\/\/\s*@exclude"`; do
-			# Munge into grep pattern
-			EXCLUDE="`echo "$EXCLUDE" | sed -e 's/^\s*\/\/\s*@exclude\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
-			if echo "$url" | grep -x "$EXCLUDE"; then
-				SHOULD_RUN=false
-				break
-			fi
-		done
+
+		SHOULD_RUN=0 # Assume this script will not be included
+		process_rule "match" 1
+		process_rule "include" 1
+		process_rule "exclude" 0
+
 		# Run the script
-		if [ $SHOULD_RUN = true ]; then
+		if [ $SHOULD_RUN = 1 ]; then
 			echo "script '$SCRIPT'" >> "$UZBL_FIFO"
 		fi
 	done
