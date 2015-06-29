@@ -32,7 +32,7 @@ do_scripts() {
 		# Find run-at code
 		THIS_RUNS_AT="document-end" # by default, scripts run after page load
 		for RUN_AT in `echo "$META" | grep "^\s*\/\/\s*@run-at"`; do
-			THIS_RUNS_AT="`echo "$RUN_AT" | sed -e 's/^\s*\/\/\s*@run-at\s*//' -e 's/\./\\\\./g' -e 's/\*/.*/g' -e 's/[\r\n]//g'`"
+			THIS_RUNS_AT="`echo "$RUN_AT" | sed -e 's/^\s*\/\/\s*@run-at\s*//' -e 's/[\r\n]//g'`"
 		done
 		if [ "$current_context" != "document-any" -a "$THIS_RUNS_AT" != "$current_context" ]; then
 			SHOULD_RUN=0
