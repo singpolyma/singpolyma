@@ -29,6 +29,15 @@ do_scripts() {
 		process_rule "include" 1
 		process_rule "exclude" 0
 
+		# Find run-at code
+		THIS_RUNS_AT="document-end" # by default, scripts run after page load
+		for RUN_AT in `echo "$META" | grep "^\s*\/\/\s*@run-at"`; do
+			THIS_RUNS_AT="`echo "$RUN_AT" | sed -e 's/^\s*\/\/\s*@run-at\s*//' -e 's/[\r\n]//g'`"
+		done
+		if [ "$current_context" != "document-any" -a "$THIS_RUNS_AT" != "$current_context" ]; then
+			SHOULD_RUN=0
+		fi
+
 		# Run the script
 		if [ $SHOULD_RUN = 1 ]; then
 			echo "script '$SCRIPT'" >> "$UZBL_FIFO"
@@ -37,4 +46,5 @@ do_scripts() {
 }
 
 # TODO search XDG_DATA_DIRS
+current_context="${1-document-any}"
 do_scripts "`dirname $0`/../userscripts"
